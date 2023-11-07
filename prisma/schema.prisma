@@ -8,13 +8,25 @@ datasource db {
 }
 
 model User {
-  id    Int @id @default(autoincrement())
+  id         String   @id @default(uuid())
   firstNsme  String
   lastName   String
-  email     String   @unique
-  age Int
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  email      String   @unique
+  age        Int
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  HouseOwned House[]  @relation("HouseOwner")
+  HouseBuilt House[]  @relation("HouseBuilder")
 }
 
-
+model House {
+  id           String   @id @default(uuid())
+  address      String   @unique
+  wifiPassword String?
+  owner        User     @relation("HouseOwner", fields: [ownerId], references: [id])
+  ownerId      String
+  builtBy      User     @relation("HouseBuilder", fields: [builtById], references: [id])
+  builtById    String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
