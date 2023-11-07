@@ -33,11 +33,30 @@ app.delete("/:id", async (req, res) => {
   res.json(deletedUser);
 });
 
-
-
 app.post("/house", async (req, res) => {
-  const newHouse = await prisma.house.create({data:req.body})
-  res.json(newHouse)
+  const newHouse = await prisma.house.create({ data: req.body });
+  res.json(newHouse);
+});
+
+app.get("/house", async (req, res) => {
+  const allHouses = await prisma.house.findMany({
+    include: {
+      owner: true,
+      builtBy: true,
+    },
+  });
+  res.json(allHouses);
+});
+app.get("/house/:id", async (req, res) => {
+  const id =req.params.id
+  const allHouses = await prisma.house.findUnique({
+    where:{id},
+    include: {
+      owner: true,
+      builtBy: true,
+    },
+  });
+  res.json(allHouses);
 });
 
 app.listen(PORT, () => {
